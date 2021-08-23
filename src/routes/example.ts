@@ -38,26 +38,34 @@ router.get('/:id', async (req, res) => {
 })
 // Post Data
 router.post('/', jsonParser, async (req, res) => {
-    res.send(dbConn.then((db:any)=> {
-        db.collection('examples').insertOne(req.body);
-    }));
+    // res.send(dbConn.then((db:any)=> {
+    //     db.collection('examples').insertOne(req.body);
+    // }));
 
     // old
     //     res.send("Post Rout done")
     //     JSON.stringify(req)
     //     res.send(req.body)
     //    console.log(req)
-    // const exppost = new Example.ravat({
-    //     name: req.body.name,
-    //     surname: req.body.surname
-    // })
-    // try {
-    //     const e1 = await exppost.save()
-    //      res.json(e1)
-    //     // res.status(400).json(e1)
-    // } catch (err) {
-    //     res.send('Error' + err)
-    // }
+    const exppost = new Example.ravat({
+        name: req.body.name,
+        surname: req.body.surname
+    })
+    const finded =await  Example.ravat.find({name:req.body.name});
+    try {
+        if(finded && finded.length>0){
+            res.json(finded)
+            console.log(finded)
+        }
+        else{
+
+            const e1 = await exppost.save()
+            res.json(e1)
+        }
+        // res.status(400).json(e1)
+    } catch (err) {
+        res.send('Error' + err)
+    }
 })
 // update data
 // router.patch('/:id', jsonParser, async (req, res) => {
