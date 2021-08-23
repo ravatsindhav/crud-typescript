@@ -29,6 +29,7 @@ dotenv.config();
 // port is now available to the Node.js runtime
 // as if it were an environment variable
 const port = process.env.SERVER_PORT;
+const API_KEY = process.env.API_KEY;
 //  const exampleRouter = require('./routes/example')
 import * as rout from './routes/example'
 app.use('/example', rout.rout as any)

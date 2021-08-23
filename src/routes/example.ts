@@ -3,8 +3,8 @@ import mongoose from "mongoose"
 import mongodb from "mongodb";
 // var mongodb = require('mongodb');
 
- const dbConn = mongodb.MongoClient.connect('mongodb://localhost:27017/Example');
-
+const dbConn = mongodb.MongoClient.connect('mongodb://localhost:27017/Example');
+const API_KEY = process.env.API_KEY;
 const urlencodedParser = express.urlencoded({ extended: false })
 const jsonParser = express.json()
 const router = express.Router()
@@ -22,15 +22,23 @@ router.get('/', async (req, res) => {
     }
 })
 // get by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: any, res) => {
     try {
-        const example = await Example.ravat.findById(req.params.id);
-        // delete example._v;
-        const dt=new Data()
-        dt._id=example._id
-        dt.name=example.name
-        dt.surname=example.surname
-        res.json(dt)
+        const key = req.headers.apikey
+        if (key && key === API_KEY){
+            console.log('req', req.headers.apikey)
+            const example = await Example.ravat.findById(req.params.id);
+            // delete example._v;
+            const dt = new Data()
+            dt._id = example._id
+            dt.name = example.name
+            dt.surname = example.surname
+            res.json(dt)
+        }
+        else{
+            res.status(500).json("Please Provide Valid Api Key")
+        }
+
 
     } catch (err) {
         res.send('Error' + err)
@@ -51,13 +59,13 @@ router.post('/', jsonParser, async (req, res) => {
         name: req.body.name,
         surname: req.body.surname
     })
-    const finded =await  Example.ravat.find({name:req.body.name});
+    const finded = await Example.ravat.find({ name: req.body.name });
     try {
-        if(finded && finded.length>0){
+        if (finded && finded.length > 0) {
             res.json(finded)
             console.log(finded)
         }
-        else{
+        else {
 
             const e1 = await exppost.save()
             res.json(e1)
@@ -99,9 +107,9 @@ router.post('/', jsonParser, async (req, res) => {
 //         res.send('Error' + err)
 //     }
 // })
-export const rout= router;
+export const rout = router;
 // export const ravat=mongoose.model('Ravat', exampleSchema)
-export class Routes{}
+export class Routes { }
 // router.use(express.urlencoded({
 //     extended: true,
 //     inflate: true,
