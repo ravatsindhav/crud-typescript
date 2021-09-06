@@ -10,12 +10,25 @@ const jsonParser = express.json()
 const router = express.Router()
 // const Example = require('../models/example_schema')
 import * as Example from '../models/example_schema'
+
+//  ('/',(req, res) => {
+//     console.log("head")
+// })
 // get All
 router.get('/', async (req, res) => {
     try {
-        const example = await Example.ravat.find()
-        delete example.__v;
-        res.json(example)
+
+        const key = req.headers.apikey
+        if (key && key === API_KEY){
+            const example = await Example.ravat.find()
+            delete example.__v;
+            res.json(example)
+        }
+        else{
+            res.status(500);
+            throw new Error("Please Provide Valid Api Key")
+            // res.status(500).error("Please Provide Valid Api Key")
+        }
 
     } catch (err) {
         res.send('Error' + err)
@@ -36,11 +49,13 @@ router.get('/:id', async (req: any, res) => {
             res.json(dt)
         }
         else{
-            res.status(500).json("Please Provide Valid Api Key")
+            throw new Error("Please Provide Valid Api Key")
+            // res.status(500).error("Please Provide Valid Api Key")
         }
 
 
     } catch (err) {
+        res.status(500);
         res.send('Error' + err)
     }
 })

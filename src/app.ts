@@ -32,10 +32,12 @@ const port = process.env.SERVER_PORT;
 const API_KEY = process.env.API_KEY;
 //  const exampleRouter = require('./routes/example')
 import * as rout from './routes/example'
+import * as user from './routes/user/user_rout'
 app.use('/example', rout.rout as any)
+app.use('/user', user.Userrout as any)
 // define a route handler for the default home page
 app.get( "/", ( req:any, res:any ) => {
-    res.send( "Hello  world!" );
+    res.send(`<b>Hello</b>`);
 } );
 
 // start the Express server
@@ -46,3 +48,13 @@ app.listen( port, () => {
 export function print_log(value:any){
     console.log("\x1b[32m", value );
 }
+
+export class Data {
+    _id: string;
+    name: string;
+    surname: string;
+    // __v: number;
+}
+
+// document.getElementById("json").textContent = JSON.stringify(new Data, undefined, 2);
+// export const jsonview =`<pre id="json"></pre>`;
